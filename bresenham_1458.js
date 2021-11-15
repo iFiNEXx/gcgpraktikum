@@ -25,23 +25,37 @@
 
 
 function drawLine(x0, y0, x1, y1){
-  let a = y1 - y0;
-  let b = -(x1 - x0);
+  let a = Math.abs(y1 - y0);
+  let b = -Math.abs(x1 - x0);
   let q = 2*a+b;
   let q_step = 2*(a+b);
   let q_equal = 2*a;
   let y = y0;
+  let x = x0;
+  let incx =1;
+  let incy =1;
 
-  for(let x = x0; x <= x1; x++){
+  if(x0>=x1){
+    incx = -1;
+  }
+
+  if(y0>=y1){
+    incy = -1;
+  }
+  
+  for(x; x !== x1; x += incx){
+
       setPixel(x, y);
-
+      if (y0 === y1) {
+        break;
+      }
       if(q < 0) {
         q = q + q_equal;
       }
 
       else {
         q = q + q_step;
-        y++;
+        y += incy;
       }
   }
 }
