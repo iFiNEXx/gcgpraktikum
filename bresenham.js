@@ -25,8 +25,25 @@
 
 
 function drawLine(x0, y0, x1, y1){
+  let a = y1 - y0;
+  let b = -(x1 - x0);
+  let q = 2*a+b;
+  let q_step = 2*(a+b);
+  let q_equal = 2*a;
+  let y = y0;
 
+  for(let x = x0; x <= x1; x++){
+      setPixel(x, y);
 
+      if(q < 0) {
+        q = q + q_equal;
+      }
+
+      else {
+        q = q + q_step;
+        y++;
+      }
+  }
 }
 
 
