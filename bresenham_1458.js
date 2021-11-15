@@ -77,8 +77,7 @@ function example(i) {
   let y = i + 2;
   for (let x = 0; x < 400; x++) {
     y--;
-    if (y < -i)
-    {
+    if (y < -i) {
       y = i;
     }
     setPixel(x, Math.abs(y));
