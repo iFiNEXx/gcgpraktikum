@@ -24,8 +24,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-function drawLine(x0, y0, x1, y1) {
-  
+function drawLine(start_x0, start_y0, end_x1, end_y1) {
+
   let x0 = start_x0; // Zuweisung der x0 Variable
   let y0 = start_y0; // Zuweisung der y0 Variable
   let x1 = end_x1; // Zuweisung der x1 Variable
@@ -79,19 +79,3 @@ function drawLine(x0, y0, x1, y1) {
 }
 
 
-
-////////////////////////////////////////////////////////////////////////////////
-// example(i)
-// Diese Funktion dient als Codebeispiel.
-// Sie wird beim Laden der Seite aufgerufen und kann entfernt werden.
-////////////////////////////////////////////////////////////////////////////////
-function example(i) {
-  let y = i + 2;
-  for (let x = 0; x < 400; x++) {
-    y--;
-    if (y < -i) {
-      y = i;
-    }
-    setPixel(x, Math.abs(y));
-  }
-}
