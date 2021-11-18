@@ -25,7 +25,6 @@
 
 
 function drawLine(start_x0, start_y0, end_x1, end_y1) {
-
   let x0 = start_x0; // Zuweisung der x0 Variable
   let y0 = start_y0; // Zuweisung der y0 Variable
   let x1 = end_x1; // Zuweisung der x1 Variable
@@ -33,9 +32,9 @@ function drawLine(start_x0, start_y0, end_x1, end_y1) {
   let y = y0; // Zuweisung der Y Variable für die Schleife
   let x = x0; // Zuweisung der X Variable für die Schleife
 
-  /**
-   * Durch Math.abs() wird der Betrag von dem Ergebnis der Rechnung genommen
-   */
+  /*
+  * Durch Math.abs() wird der Betrag von dem Ergebnis der Rechnung genommen
+  **/
   let delta_y = Math.abs(y1 - y0); // Zuweisung und berechnung von Delta Y
   let delta_x = -Math.abs(x1 - x0); // Zuweisung und berechnung von Delta X
   let q = 2 * delta_y + delta_x; // Zuweisung und berechnung von der Entscheidungsvariable Q
@@ -43,8 +42,8 @@ function drawLine(start_x0, start_y0, end_x1, end_y1) {
   let q_equal = 2 * delta_y; // Variable für die Berechnung des neuen Q Werts
 
 
-  let incx =1; //Inkrementierung auf der x-Achse (nach rechts positiv, nach links negativ)
-  let incy =1; //Inkrementierung auf der y-Achse (nach rechts positiv, nach links negativ)
+  let incx =1; // Inkrementierung auf der x-Achse (nach rechts positiv, nach links negativ)
+  let incy =1; // Inkrementierung auf der y-Achse (nach rechts positiv, nach links negativ)
 
   /*
   * Falls der Start X oder Y Wert größer als der End X oder Y Wert ist,
@@ -69,7 +68,7 @@ function drawLine(start_x0, start_y0, end_x1, end_y1) {
         break;
       }
 
-      if(q < 0) {
+      if(q < 0) { // Falls die Entscheidungsvariable Q negativ ist, bleibt der Y Wert gleich.
         q = q + q_equal;
       } else {
         q = q + q_step;

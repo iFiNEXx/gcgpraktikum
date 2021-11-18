@@ -23,49 +23,29 @@
 // in dieser Funktion. Einen Punkt zeichnen Sie mit setPixel(x,y).
 ////////////////////////////////////////////////////////////////////////////////
 
-/*
-* Dieser Teil zeichnet die Linie indem jeder einzelne Pixel gesetzt wird.
-* Dadurch das wir nun incx/incy eingebaut (Sie ersetzen das ehemalige ++) haben funktionieren die Oktanten 4,5,8 nun auch.
-**/
-function drawLine(x0, y0, x1, y1){
-  let delta_y = Math.abs(y1 - y0); // Zuweisung und berechnung von Delta Y
-  let delta_x = -Math.abs(x1 - x0); // Zuweisung und berechnung von Delta X
+function drawLine(start_x0, start_y0, end_x1, end_y1) {
+  /*
+   * Durch Math.abs() wird der Betrag von dem Ergebnis der Rechnung genommen
+  **/
+  let delta_y = Math.abs(end_y1 - start_y0); // Zuweisung und berechnung von Delta Y
+  let delta_x = -Math.abs(end_x1 - start_x0); // Zuweisung und berechnung von Delta X
   let q = 2 * delta_y + delta_x; // Zuweisung und berechnung von der Entscheidungsvariable Q
   let q_step = 2 * (delta_y + delta_x); // Inkrement für die Entscheidungsvariable Q
   let q_equal = 2 * delta_y; // Variable für die Berechnung des neuen Q Werts
-  let y = y0;
+  let x = start_x0; // Zuweisung der X Variable für die Schleife
+  let y = start_y0; // Zuweisung der Y Variable für die Schleife
 
-  for(let x = x0; x <= x1; x++){
-      setPixel(x, y);
+  /*
+  * Dieser Teil zeichnet die Linie indem jeder einzelne Pixel gesetzt wird.
+  **/
+  for(x; x <= end_x1; x++) {
+    setPixel(x, y);
 
-      if(q < 0) {
-        q = q + q_equal;
-      }
-
-      else {
-        q = q + q_step;
-        y++;
-      }
-  }
-}
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-// example(i)
-// Diese Funktion dient als Codebeispiel.
-// Sie wird beim Laden der Seite aufgerufen und kann entfernt werden.
-////////////////////////////////////////////////////////////////////////////////
-function example(i)
-{
-  let y = i + 2;
-  for (let x = 0; x < 400; x++)
-  {
-    y--;
-    if (y < -i)
-    {
-      y = i;
+    if(q < 0) { // Falls die Entscheidungsvariable Q negativ ist, bleibt der Y Wert gleich.
+      q = q + q_equal;
+    } else {
+      q = q + q_step;
+      y++;
     }
-    setPixel(x, Math.abs(y));
   }
 }

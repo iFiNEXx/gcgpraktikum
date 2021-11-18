@@ -31,6 +31,9 @@ function drawLine(start_x0, start_y0, end_x1, end_y1) {
    let x1 = end_x1; // Zuweisung der x1 Variable
    let y1 = end_y1; // Zuweisung der y1 Variable
 
+   /*
+   * Durch Math.abs() wird der Betrag von dem Ergebnis der Rechnung genommen
+   **/
    if(Math.abs(y1 - y0) > Math.abs(x1 - x0)) { // Falls die Steigung von Delta Y größer als die Steigung von Delta X ist, wird das Koordinatensystem gedreht.
     x0 = start_y0;
     y0 = start_x0;
@@ -67,8 +70,8 @@ function drawLine(start_x0, start_y0, end_x1, end_y1) {
   * Dadurch das wir nun incx/incy eingebaut (Sie ersetzen das ehemalige ++) haben funktionieren die Oktanten 4,5,8 nun auch.
   **/
   for(x; x !== x1; x += incx) {
-    if (swap) {
-      setPixel(y,x)
+    if (swap) { // Falls das Koordinatensystem gedreht wird.
+      setPixel(y, x)
     } else {
       setPixel(x, y);
     }
@@ -77,28 +80,11 @@ function drawLine(start_x0, start_y0, end_x1, end_y1) {
       break;
     }
 
-    if(q < 0) {
+    if(q < 0) { // Falls die Entscheidungsvariable Q negativ ist, bleibt der Y Wert gleich.
       q = q + q_equal;
     } else {
       q = q + q_step;
-      y += incy; 
+      y += incy;
     }
-  }
-}
-
-
-////////////////////////////////////////////////////////////////////////////////
-// example(i)
-// Diese Funktion dient als Codebeispiel.
-// Sie wird beim Laden der Seite aufgerufen und kann entfernt werden.
-////////////////////////////////////////////////////////////////////////////////
-function example(i) {
-  let y = i + 2;
-  for (let x = 0; x < 400; x++) {
-    y--;
-    if (y < -i) {
-      y = i;
-    }
-    setPixel(x, Math.abs(y));
   }
 }
