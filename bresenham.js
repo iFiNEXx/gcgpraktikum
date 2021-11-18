@@ -24,46 +24,47 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 
-function drawLine(x0, y0, x1, y1) {
-  /**
-   * Durch Math.abs() wird der Betrag von dem Ergebnis der Rechnung genommen
-   */
+function drawLine(start_x0, start_y0, end_x1, end_y1) {
+   let swap = false; // Wird auf True gesetzt falls das Koordinatensystem gedreht wird.
+   let x0 = start_x0; // Zuweisung der x0 Variable
+   let y0 = start_y0; // Zuweisung der y0 Variable
+   let x1 = end_x1; // Zuweisung der x1 Variable
+   let y1 = end_y1; // Zuweisung der y1 Variable
 
-   let swap = false;
-
-   if(Math.abs(y1 - y0) > Math.abs(x1 - x0) ) {
-    let tmp = x0;
-    x0 = y0;
-    y0 = tmp;
-    tmp= y1;
-    y1 = x1;
-    x1 = tmp;
+   if(Math.abs(y1 - y0) > Math.abs(x1 - x0)) { // Falls die Steigung von Delta Y größer als die Steigung von Delta X ist, wird das Koordinatensystem gedreht.
+    x0 = start_y0;
+    y0 = start_x0;
+    y1 = end_x1;
+    x1 = end_y1;
     swap = true;
   }
 
-  let y = y0;
-  let x = x0;
-  let a = Math.abs(y1 - y0); 
-  let b = -Math.abs(x1 - x0);
-  let q = 2*a+b;
-  let q_step = 2*(a+b);
-  let q_equal = 2*a;
+  let y = y0; // Zuweisung der Y Variable für die Schleife
+  let x = x0; // Zuweisung der X Variable für die Schleife
+  let delta_y = Math.abs(y1 - y0); // Zuweisung und berechnung von Delta Y
+  let delta_x = -Math.abs(x1 - x0); // Zuweisung und berechnung von Delta X
+  let q = 2 * delta_y + delta_x; // Zuweisung und berechnung von der Entscheidungsvariable Q
+  let q_step = 2 * (delta_y + delta_x); // Inkrement für die Entscheidungsvariable Q
+  let q_equal = 2 * delta_y; // Variable für die Berechnung des neuen Q Werts
 
-  let incx =1; //Inkrementierung auf der x-Achse (nach rechts positiv, nach links negativ)
-  let incy =1; //Inkrementierung auf der y-Achse (nach rechts positiv, nach links negativ)
+  let incx = 1; // Inkrementierung auf der x-Achse (nach rechts positiv, nach links negativ)
+  let incy = 1; // Inkrementierung auf der y-Achse (nach rechts positiv, nach links negativ)
 
-  if(x0>=x1){
+  /*
+  * Falls der Start X oder Y Wert größer als der End X oder Y Wert ist,
+  * dann wird das Inkrement negativ.
+  **/
+  if(x0 >= x1) {
     incx = -1;
   }
 
-  if(y0>=y1){
+  if(y0 >= y1) {
     incy = -1;
   }
   
   /*
-  * Dieser Teil zeichnet die Linie.
+  * Dieser Teil zeichnet die Linie indem jeder einzelne Pixel gesetzt wird.
   * Dadurch das wir nun incx/incy eingebaut (Sie ersetzen das ehemalige ++) haben funktionieren die Oktanten 4,5,8 nun auch.
-  * Durch y
   **/
   for(x; x !== x1; x += incx) {
     if (swap) {

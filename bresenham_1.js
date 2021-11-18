@@ -23,13 +23,16 @@
 // in dieser Funktion. Einen Punkt zeichnen Sie mit setPixel(x,y).
 ////////////////////////////////////////////////////////////////////////////////
 
-
+/*
+* Dieser Teil zeichnet die Linie indem jeder einzelne Pixel gesetzt wird.
+* Dadurch das wir nun incx/incy eingebaut (Sie ersetzen das ehemalige ++) haben funktionieren die Oktanten 4,5,8 nun auch.
+**/
 function drawLine(x0, y0, x1, y1){
-  let a = y1 - y0;
-  let b = -(x1 - x0);
-  let q = 2*a+b;
-  let q_step = 2*(a+b);
-  let q_equal = 2*a;
+  let delta_y = Math.abs(y1 - y0); // Zuweisung und berechnung von Delta Y
+  let delta_x = -Math.abs(x1 - x0); // Zuweisung und berechnung von Delta X
+  let q = 2 * delta_y + delta_x; // Zuweisung und berechnung von der Entscheidungsvariable Q
+  let q_step = 2 * (delta_y + delta_x); // Inkrement für die Entscheidungsvariable Q
+  let q_equal = 2 * delta_y; // Variable für die Berechnung des neuen Q Werts
   let y = y0;
 
   for(let x = x0; x <= x1; x++){
