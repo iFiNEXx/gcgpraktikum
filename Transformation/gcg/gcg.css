@@ -1,0 +1,57 @@
+body 
+{ 
+  font: 14px Arial, sans-serif;
+  color: white; 
+  background: black; 
+}
+
+
+h1 
+{ 
+  font: bold 24px Arial;
+  text-align: center; 
+}
+
+
+h2 
+{ 
+  font: bold 18px Arial;
+  text-align: center; 
+}
+
+h3
+{
+  font: bold 16px Arial;
+}
+
+
+canvas 
+{ 
+  border: 1px solid gray; 
+  margin-left: auto; 
+  margin-right: auto; 
+  display: block; 
+}
+
+
+.center
+{ 
+  text-align: center;
+}
+
+
+iframe
+{
+  width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  border: 0px;
+}
+
+.assignment
+{
+  width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
