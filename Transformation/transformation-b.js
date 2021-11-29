@@ -63,7 +63,7 @@ function renderScene(time) {
     1.0
   );
   // Faktor fuer die Zeit -- fuer Zeitraffer / Zeitlupe
-  let timeScale = 10.0;
+  let timeScale = 20000.0;
 
   // Falls der Szenenknoten eine Shape enthaelt ...
   if (sceneRoot.shape != undefined) {
@@ -95,14 +95,14 @@ function renderScene(time) {
             matrix.nMatrix
           );
 
-          /* // Falls Planet ein children (Mond) hat ...
+          // Falls Planet ein children (Mond) hat ...
           if (sceneRoot.children[i].children.length > 0) {
             // Schleife zur berechnung aller Monde eines Planeten
             for (j = 0; j < sceneRoot.children[i].children.length; j++) {
               // Falls der Mond ein Shape enthaelt ...
               if (sceneRoot.children[i].children[0].shape != undefined) {
                 // Matrix berechnung eines Mondes
-                  let matrixMoon = transformationMoon(
+                let matrixMoon = transformationMoon(
                   sceneRoot.children[i].animator(timeScale * time),
                   sceneRoot.children[i].children[j].animator(timeScale * time)
                 );
@@ -115,7 +115,7 @@ function renderScene(time) {
                 );
               }
             }
-          } */
+          }
         }
       }
     }
@@ -131,17 +131,17 @@ function initScene() {
   // TODO: Hier werden Sie die Szenenknoten für Planeten und Monde anlegen.
 
   // -- Mond --------------------
-  /* var moon = {
+  var moon = {
     animator: animateMoon,
     shape: CreateMoon(),
     children: [],
-  }; */
+  };
 
   // -- Erde --------------------
   var earth = {
     animator: animateEarth,
     shape: CreateEarth(),
-    children: [],
+    children: [moon],
   };
 
   // -- Sonne --------------------
@@ -243,7 +243,7 @@ function animateEarth(time) {
       1.0
     ),
 
-    pointMatrixEarthRotation: new Matrix4(
+    pointMatrixSelfRotation: new Matrix4(
       Math.cos(time / 24 / 60),
       0.0,
       Math.sin(time / 24 / 60),
@@ -262,7 +262,7 @@ function animateEarth(time) {
       1.0
     ),
 
-    pointMatrixSunRotation: new Matrix4(
+    pointMatrixParentRotation: new Matrix4(
       Math.cos(time / 24 / 60 / 365.2),
       0.0,
       Math.sin(time / 24 / 60 / 365.2),
@@ -281,7 +281,7 @@ function animateEarth(time) {
       1.0
     ),
 
-    normalMatrixEarthRotation: new Matrix4(
+    normalMatrixSelfRotation: new Matrix4(
       Math.cos(time / 24 / 60),
       0.0,
       Math.sin(time / 24 / 60),
@@ -300,7 +300,7 @@ function animateEarth(time) {
       1.0
     ),
 
-    normalMatrixSunRotation: new Matrix4(
+    normalMatrixParentRotation: new Matrix4(
       Math.cos(time / 24 / 60 / 365.2),
       0.0,
       Math.sin(time / 24 / 60 / 365.2),
@@ -312,6 +312,125 @@ function animateEarth(time) {
       -Math.sin(time / 24 / 60 / 365.2),
       0.0,
       Math.cos(time / 24 / 60 / 365.2),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+  };
+}
+
+// -- Mond (Earth) --------------------------------------------------------------------
+function animateMoon(time) {
+  return {
+    pointMatrixScale: new Matrix4(
+      3.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      3.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixTranslate: new Matrix4(
+      1.0,
+      0.0,
+      0.0,
+      22.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 27.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 27.3),
       0.0,
       0.0,
       0.0,
@@ -368,12 +487,68 @@ function transformation(nodeTrans) {
     1.0
   );
 
-  pMatrix.multiply(nodeTrans.pointMatrixSunRotation);
+  pMatrix.multiply(nodeTrans.pointMatrixParentRotation);
   pMatrix.multiply(nodeTrans.pointMatrixTranslate);
   pMatrix.multiply(nodeTrans.pointMatrixScale);
-  pMatrix.multiply(nodeTrans.pointMatrixEarthRotation);
-  nMatrix.multiply(nodeTrans.normalMatrixEarthRotation);
-  nMatrix.multiply(nodeTrans.normalMatrixSunRotation);
+  pMatrix.multiply(nodeTrans.pointMatrixSelfRotation);
+  nMatrix.multiply(nodeTrans.normalMatrixSelfRotation);
+  nMatrix.multiply(nodeTrans.normalMatrixParentRotation);
+
+  return { pMatrix, nMatrix };
+}
+
+// Transformationsfunktionen für Monde
+// nodeTrans: Planet um welcher der Mond kreist
+// nodeTransMoon: Mond welcher berechnet werden soll
+// return: pMatrix, nMatrix
+function transformationMoon(nodeTrans, nodeTransMoon) {
+  pMatrix = new Matrix4(
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  );
+  nMatrix = new Matrix4(
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  );
+
+  pMatrix.multiply(nodeTrans.pointMatrixParentRotation);
+  pMatrix.multiply(nodeTrans.pointMatrixTranslate);
+  pMatrix.multiply(nodeTransMoon.pointMatrixParentRotation);
+  pMatrix.multiply(nodeTransMoon.pointMatrixTranslate);
+  pMatrix.multiply(nodeTransMoon.pointMatrixScale);
+  pMatrix.multiply(nodeTransMoon.pointMatrixSelfRotation);
+
+  nMatrix.multiply(nodeTrans.normalMatrixParentRotation);
+  nMatrix.multiply(nodeTransMoon.normalMatrixParentRotation);
+  nMatrix.multiply(nodeTransMoon.normalMatrixSelfRotation);
 
   return { pMatrix, nMatrix };
 }
