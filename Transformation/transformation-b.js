@@ -78,11 +78,12 @@ function renderScene(time) {
 
     // Falls sceneRoot ein children hat ...
     if (sceneRoot.children.length > 0) {
-      planetLoop(0, time);
+      planetLoop(0, time); // sceneRoot()
     }
   }
 }
 
+// Loop soll in ein Loop geändert werden, z.B.: loop(time, array, index)
 function planetLoop(i, time) {
   // Falls der Planet ein Shape enthaelt ...
   if (sceneRoot.children[i].shape != undefined) {
@@ -271,6 +272,8 @@ function animateSun(time) {
 // TODO: Hier werden Sie weitere Animate-Funktionen implementieren.
 
 function animateNode(time) {
+  // Aufruf der Funktionen Scale(matrix, radius), Translate(matrix, orbitRadius), Rotate(matrix, time, rotation)
+
   return {
     pointMatrixScale: new Matrix4(
       this.radius,
