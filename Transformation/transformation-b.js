@@ -17,6 +17,7 @@
 
 // globale Variablen
 let sceneRoot; // speichert den Wurzelknoten der Szene
+let timeScale = 20000.0; // Faktor fuer die Zeit -- fuer Zeitraffer / Zeitlupe
 
 ////////////////////////////////////////////////////////////////////////////////
 // renderScene(time)
@@ -62,8 +63,6 @@ function renderScene(time) {
     0.0,
     1.0
   );
-  // Faktor fuer die Zeit -- fuer Zeitraffer / Zeitlupe
-  let timeScale = 20000.0;
 
   // Falls der Szenenknoten eine Shape enthaelt ...
   if (sceneRoot.shape != undefined) {
@@ -79,45 +78,51 @@ function renderScene(time) {
 
     // Falls sceneRoot ein children hat ...
     if (sceneRoot.children.length > 0) {
-      // Schleife zur berechnung aller Planeten
-      for (var i = 0; i < sceneRoot.children.length; i++) {
-        // Falls der Planet ein Shape enthaelt ...
-        if (sceneRoot.children[i].shape != undefined) {
-          // Matrix berechnung eines Planeten
-          let matrix = transformation(
-            sceneRoot.children[i].animator(timeScale * time)
-          );
+      planetLoop(0, time);
+    }
+  }
+}
 
-          // Planet rendern
-          renderSceneNode(
-            sceneRoot.children[i],
-            matrix.pMatrix,
-            matrix.nMatrix
-          );
+function planetLoop(i, time) {
+  // Falls der Planet ein Shape enthaelt ...
+  if (sceneRoot.children[i].shape != undefined) {
+    // Matrix berechnung eines Planeten
+    let matrix = transformation(
+      sceneRoot.children[i].animator(timeScale * time)
+    );
 
-          // Falls Planet ein children (Mond) hat ...
-          if (sceneRoot.children[i].children.length > 0) {
-            // Schleife zur berechnung aller Monde eines Planeten
-            for (j = 0; j < sceneRoot.children[i].children.length; j++) {
-              // Falls der Mond ein Shape enthaelt ...
-              if (sceneRoot.children[i].children[0].shape != undefined) {
-                // Matrix berechnung eines Mondes
-                let matrixMoon = transformationMoon(
-                  sceneRoot.children[i].animator(timeScale * time),
-                  sceneRoot.children[i].children[j].animator(timeScale * time)
-                );
+    // Planet rendern
+    renderSceneNode(sceneRoot.children[i], matrix.pMatrix, matrix.nMatrix);
 
-                // Mond rendern
-                renderSceneNode(
-                  sceneRoot.children[i].children[j],
-                  matrixMoon.pMatrix,
-                  matrixMoon.nMatrix
-                );
-              }
-            }
-          }
-        }
-      }
+    if (sceneRoot.children[i].children.length > 0) {
+      moonLoop(i, 0, time);
+    }
+
+    if (i < sceneRoot.children.length - 1) {
+      i++;
+      planetLoop(i, time);
+    }
+  }
+}
+
+function moonLoop(i, j, time) {
+  if (sceneRoot.children[i].children[j].shape != undefined) {
+    // Matrix berechnung eines Mondes
+    let matrixMoon = transformationMoon(
+      sceneRoot.children[i].animator(timeScale * time),
+      sceneRoot.children[i].children[j].animator(timeScale * time)
+    );
+
+    // Mond rendern
+    renderSceneNode(
+      sceneRoot.children[i].children[j],
+      matrixMoon.pMatrix,
+      matrixMoon.nMatrix
+    );
+
+    if (j < sceneRoot.children[i].children.length - 1) {
+      j++;
+      moonLoop(i, j, time);
     }
   }
 }
@@ -129,6 +134,41 @@ function renderScene(time) {
 ////////////////////////////////////////////////////////////////////////////////
 function initScene() {
   // TODO: Hier werden Sie die Szenenknoten für Planeten und Monde anlegen.
+
+  // -- Phobos --------------------
+  var phobos = {
+    animator: animatePhobos,
+    shape: CreateMoon(),
+    children: []
+  };
+  
+  // -- Deimos --------------------
+  var deimos = {
+    animator: animateDeimos,
+    shape: CreateMoon(),
+    children: []
+  };
+  
+  // -- Mars --------------------
+  var mars = {
+    animator: animateMars,
+    shape: CreateMars(),
+    children: []
+  }; 
+  
+  // -- Venus --------------------
+  var venus = {
+    animator: animateVenus,
+    shape: CreateVenus(),
+    children: []
+  }; 
+ 
+  // -- Merkur -------------------- 
+  var mercury = {
+    animator: animateMercury,
+    shape: CreateMercury(),
+    children: []
+  };
 
   // -- Mond --------------------
   var moon = {
@@ -148,7 +188,7 @@ function initScene() {
   let sun = {
     animator: animateSun,
     shape: CreateSun(),
-    children: [earth],
+    children: [earth, mercury, venus, mars],
   };
 
   // Setze die Sonne als Wurzelknoten der Szene.
@@ -431,6 +471,596 @@ function animateMoon(time) {
       -Math.sin(time / 24 / 60 / 27.3),
       0.0,
       Math.cos(time / 24 / 60 / 27.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+  };
+}
+
+// -- Mercury --------------------------------------------------------------------
+function animateMercury(time) {
+  return {
+    pointMatrixScale: new Matrix4(
+      5.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      5.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+    pointMatrixTranslate: new Matrix4(
+      1.0,
+      0.0,
+      0.0,
+      76.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+    pointMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 58.7),
+      0.0,
+      Math.sin(time / 24 / 60 / 58.7),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 58.7),
+      0.0,
+      Math.cos(time / 24 / 60 / 58.7),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+    pointMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 88),
+      0.0,
+      Math.sin(time / 24 / 60 / 88),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 88),
+      0.0,
+      Math.cos(time / 24 / 60 / 88),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+    normalMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 58.7),
+      0.0,
+      Math.sin(time / 24 / 60 / 58.7),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 58.7),
+      0.0,
+      Math.cos(time / 24 / 60 / 58.7),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+    normalMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 88),
+      0.0,
+      Math.sin(time / 24 / 60 / 88),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 88),
+      0.0,
+      Math.cos(time / 24 / 60 / 88),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+  };
+}
+
+// -- Venus --------------------------------------------------------------------
+function animateVenus(time) {
+  return {
+    pointMatrixScale: new Matrix4(
+      12.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      12.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      12.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixTranslate: new Matrix4(
+      1.0,
+      0.0,
+      0.0,
+      145.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 243),
+      0.0,
+      Math.sin(time / 24 / 60 / 243),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 243),
+      0.0,
+      Math.cos(time / 24 / 60 / 243),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 224.7),
+      0.0,
+      Math.sin(time / 24 / 60 / 224.7),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 224.7),
+      0.0,
+      Math.cos(time / 24 / 60 / 224.7),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 243),
+      0.0,
+      Math.sin(time / 24 / 60 / 243),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 243),
+      0.0,
+      Math.cos(time / 24 / 60 / 243),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 224.7),
+      0.0,
+      Math.sin(time / 24 / 60 / 224.7),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 224.7),
+      0.0,
+      Math.cos(time / 24 / 60 / 224.7),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+  };
+}
+
+// -- Mars --------------------------------------------------------------------
+function animateMars(time) {
+  return {
+    pointMatrixScale: new Matrix4(
+      7.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      7.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      7.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixTranslate: new Matrix4(
+      1.0,
+      0.0,
+      0.0,
+      305.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 1),
+      0.0,
+      Math.sin(time / 24 / 60 / 1),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 1),
+      0.0,
+      Math.cos(time / 24 / 60 / 1),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 687),
+      0.0,
+      Math.sin(time / 24 / 60 / 687),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 687),
+      0.0,
+      Math.cos(time / 24 / 60 / 687),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 1),
+      0.0,
+      Math.sin(time / 24 / 60 / 1),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 1),
+      0.0,
+      Math.cos(time / 24 / 60 / 1),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 687),
+      0.0,
+      Math.sin(time / 24 / 60 / 687),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 687),
+      0.0,
+      Math.cos(time / 24 / 60 / 687),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+  };
+}
+
+// -- Phobos (Mars) --------------------------------------------------------------------
+function animatePhobos(time) {
+  return {
+    pointMatrixScale: new Matrix4(
+      2.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      2.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixTranslate: new Matrix4(
+      1.0,
+      0.0,
+      0.0,
+      15.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 0.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 0.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+  };
+}
+
+// -- Deimos (Mars) --------------------------------------------------------------------
+function animateDeimos(time) {
+  return {
+    pointMatrixScale: new Matrix4(
+      1.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.5,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixTranslate: new Matrix4(
+      1.0,
+      0.0,
+      0.0,
+      20.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 1.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 1.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    pointMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 1.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 1.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixSelfRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 1.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 1.3),
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ),
+
+    normalMatrixParentRotation: new Matrix4(
+      Math.cos(time / 24 / 60 / 1.3),
+      0.0,
+      Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0,
+      -Math.sin(time / 24 / 60 / 1.3),
+      0.0,
+      Math.cos(time / 24 / 60 / 1.3),
       0.0,
       0.0,
       0.0,
