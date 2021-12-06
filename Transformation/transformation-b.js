@@ -6,13 +6,13 @@
 // HS Duesseldorf - Fachbereich Medien - Grundlagen d. Computergrafik
 // Wintersemester 2021/22
 //
-// Studiengang:
-// Gruppe     :
-// Autor 1    :
-// Autor 2    :
-// Autor 3    :
-// Autor 4    :
-// Autor 5    :
+// Studiengang: BMI
+// Gruppe     : N
+// Autor 1    : Blumenrath, Kim
+// Autor 2    : Fitzen, Julian
+// Autor 3    : Hüls, Jan
+// Autor 4    : Kiesche, Valentin
+// Autor 5    : Lamsalam, Chaymae
 ////////////////////////////////////////////////////////////////////////////////
 
 // globale Variablen
