@@ -153,7 +153,7 @@ function initScene() {
   var mars = {
     animator: animateMars,
     shape: CreateMars(),
-    children: []
+    children: [deimos, phobos]
   }; 
   
   // -- Venus --------------------
@@ -930,7 +930,7 @@ function animatePhobos(time) {
       1.0
     ),
 
-    normalMatrixSelfRotation: new Matrix4(
+    normalMatrixParentRotation: new Matrix4(
       Math.cos(time / 24 / 60 / 0.3),
       0.0,
       Math.sin(time / 24 / 60 / 0.3),
