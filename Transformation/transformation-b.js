@@ -200,9 +200,20 @@ function animateSun(time) {
   };
 }
 
-// TODO: Hier werden Sie weitere Animate-Funktionen implementieren.
+/**
+ * Die Funktion animateNode() führt die einzelnen Transformationen für die planetaren Objekte durch.
+ * in transform() werden die einzelen Transformationen aufgerufen und die Matrizen werden in der korrekten Reihenfolge
+ * multipliziert.
+ * 
+ * @param {*} time übergibt den aktuellen Zeit-Multiplikator
+ * @param {*} radius übergibt den Radius des Objekts
+ * @param {*} selfRotation übergibt die Rotation des Objekts
+ * @param {*} orbitRotation übergibt die Rotation des Objekts um den Parent 
+ * @returns neue Matrix
+ */
 
 function animateNode(time) {
+  //Winkelberechnung und Geschwindkeitsberechnung
   let speed = time * (2 * Math.PI);
   let cosAlphaSelf = Math.cos(speed / this.selfRotation);
   let sinAlphaSelf = Math.sin(speed / this.selfRotation);
@@ -210,41 +221,42 @@ function animateNode(time) {
   let sinAlphaParent = Math.sin(speed / this.orbitRotation);
 
   return {
+    //Skalierungsmatrix
     pointMatrixScale: new Matrix4(
       this.radius, 0.0, 0.0, 0.0, 
       0.0, this.radius, 0.0, 0.0, 
       0.0, 0.0, this.radius, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ),
-
+    //Translationsmatrix
     pointMatrixTranslate: new Matrix4(
       1.0, 0.0, 0.0, this.orbitRadius, 
       0.0, 1.0, 0.0, 0.0, 
       0.0, 0.0, 1.0, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ),
-
+    //die Rotationsmatrix wird mit der Geschwindigkeit verrechnet
     pointMatrixSelfRotation: new Matrix4(
       cosAlphaSelf, 0.0, sinAlphaSelf, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
       -sinAlphaSelf, 0.0, cosAlphaSelf, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ),
-
+    //Rotationsmatrix fuer parent (Elternplanet)
     pointMatrixParentRotation: new Matrix4(
       cosAlphaParent, 0.0, sinAlphaParent, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
       -sinAlphaParent, 0.0, cosAlphaParent, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ), 
-
+    //die Rotationsmatrix wird mit der Geschwindigkeit verrechnet mit zugehörigen Normalen
     normalMatrixSelfRotation: new Matrix4(
       cosAlphaSelf, 0.0, sinAlphaSelf, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
       -sinAlphaSelf, 0.0, cosAlphaSelf, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ), 
-
+    //Rotationsmatrix fuer parent (Elternplanet) mit zugehörigen Normalen
     normalMatrixParentRotation: new Matrix4(
       cosAlphaParent, 0.0, sinAlphaParent, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
