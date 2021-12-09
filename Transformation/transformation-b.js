@@ -27,17 +27,17 @@ let timeScale = 10.0; // Faktor fuer die Zeit -- fuer Zeitraffer / Zeitlupe
 function renderScene(time) {
   // Transformationsmatrix fuer Punkte
   let pointMatrix = new Matrix4(
-1.0, 0.0, 0.0, 0.0, 
-0.0, 1.0, 0.0, 0.0, 
-0.0, 0.0, 1.0, 0.0, 
-0.0, 0.0, 0.0, 1.0
+        1.0, 0.0, 0.0, 0.0, 
+        0.0, 1.0, 0.0, 0.0, 
+        0.0, 0.0, 1.0, 0.0, 
+        0.0, 0.0, 0.0, 1.0
   );
   // Transformationsmatrix fuer Normalen
   let normalMatrix = new Matrix4(
-1.0, 0.0, 0.0, 0.0, 
-0.0, 1.0, 0.0, 0.0, 
-0.0, 0.0, 1.0, 0.0, 
-0.0, 0.0, 0.0, 1.0
+        1.0, 0.0, 0.0, 0.0, 
+        0.0, 1.0, 0.0, 0.0, 
+        0.0, 0.0, 1.0, 0.0, 
+        0.0, 0.0, 0.0, 1.0
   );
 
   // Falls der Szenenknoten eine Shape enthaelt ...
@@ -52,54 +52,33 @@ function renderScene(time) {
     // Szenenknoten rendern
     renderSceneNode(sceneRoot, pointMatrix, normalMatrix);
 
-    // Falls sceneRoot ein children hat ...
-    if (sceneRoot.children.length > 0) {
-      planetLoop(0, time); // sceneRoot()
-    }
+    loop(time, sceneRoot.children, 0);
   }
 }
 
 // Loop soll in ein Loop geändert werden, z.B.: loop(time, array, index)
-function planetLoop(i, time) {
-  // Falls der Planet ein Shape enthaelt ...
-  if (sceneRoot.children[i].shape != undefined) {
-    // Matrix berechnung eines Planeten
-    let matrix = transformation(
-      sceneRoot.children[i].animator(timeScale * time)
-    );
 
-    // Planet rendern
-    renderSceneNode(sceneRoot.children[i], matrix.pMatrix, matrix.nMatrix);
+function loop(time, array, index, parent) {
+  if(array.length > 0) {
+    if(array[index].shape != undefined) {
+      let matrix;
 
-    if (sceneRoot.children[i].children.length > 0) {
-      moonLoop(i, 0, time);
-    }
+      if(parent == undefined) {
+        matrix = transformation(array[index].animator(timeScale * time));
+      } else {
+        matrix = transformation(array[index].animator(timeScale * time), parent.animator(timeScale * time));
+      }
+      
+      renderSceneNode(array[index], matrix.pointMatrix, matrix.normalMatrix);
 
-    if (i < sceneRoot.children.length - 1) {
-      i++;
-      planetLoop(i, time);
-    }
-  }
-}
-
-function moonLoop(i, j, time) {
-  if (sceneRoot.children[i].children[j].shape != undefined) {
-    // Matrix berechnung eines Mondes
-    let matrixMoon = transformationMoon(
-      sceneRoot.children[i].animator(timeScale * time),
-      sceneRoot.children[i].children[j].animator(timeScale * time)
-    );
-
-    // Mond rendern
-    renderSceneNode(
-      sceneRoot.children[i].children[j],
-      matrixMoon.pMatrix,
-      matrixMoon.nMatrix
-    );
-
-    if (j < sceneRoot.children[i].children.length - 1) {
-      j++;
-      moonLoop(i, j, time);
+      if(parent == undefined && array[index].children.length > 0) {
+        loop(time, array[index].children, 0, array[index]);
+      }
+      
+      if(index < array.length - 1) {
+        index++;
+        loop(time, array, index, parent);
+      }
     }
   }
 }
@@ -281,58 +260,39 @@ function animateNode(time) {
 // Transformationsfunktionen für Planeten
 // nodeTrans: Planet welcher berechnet werden soll
 // return: pMatrix,  nMatrix
-function transformation(nodeTrans) {
-  let pMatrix = new Matrix4(
-    1.0, 0.0, 0.0, 0.0, 
-    0.0, 1.0, 0.0, 0.0, 
-    0.0, 0.0, 1.0, 0.0, 
-    0.0, 0.0, 0.0, 1.0
-  );
-  let nMatrix = new Matrix4(
+function transformation(animator, parentAnimator) {
+  let pointMatrix = new Matrix4(
     1.0, 0.0, 0.0, 0.0, 
     0.0, 1.0, 0.0, 0.0, 
     0.0, 0.0, 1.0, 0.0, 
     0.0, 0.0, 0.0, 1.0
   );
 
-  pMatrix.multiply(nodeTrans.pointMatrixParentRotation);
-  pMatrix.multiply(nodeTrans.pointMatrixTranslate);
-  pMatrix.multiply(nodeTrans.pointMatrixScale);
-  pMatrix.multiply(nodeTrans.pointMatrixSelfRotation);
-  nMatrix.multiply(nodeTrans.normalMatrixSelfRotation);
-  nMatrix.multiply(nodeTrans.normalMatrixParentRotation);
-
-  return { pMatrix,  nMatrix };
-}
-
-// Transformationsfunktionen für Monde
-// nodeTrans: Planet um welcher der Mond kreist
-// nodeTransMoon: Mond welcher berechnet werden soll
-// return: pMatrix,  nMatrix
-function transformationMoon(nodeTrans,  nodeTransMoon) {
-  let pMatrix = new Matrix4(
-    1.0, 0.0, 0.0, 0.0, 
-    0.0, 1.0, 0.0, 0.0, 
-    0.0, 0.0, 1.0, 0.0, 
-    0.0, 0.0, 0.0, 1.0
-  );
-  let nMatrix = new Matrix4(
+  let normalMatrix = new Matrix4(
     1.0, 0.0, 0.0, 0.0, 
     0.0, 1.0, 0.0, 0.0, 
     0.0, 0.0, 1.0, 0.0, 
     0.0, 0.0, 0.0, 1.0
   );
 
-  pMatrix.multiply(nodeTrans.pointMatrixParentRotation);
-  pMatrix.multiply(nodeTrans.pointMatrixTranslate);
-  pMatrix.multiply(nodeTransMoon.pointMatrixParentRotation);
-  pMatrix.multiply(nodeTransMoon.pointMatrixTranslate);
-  pMatrix.multiply(nodeTransMoon.pointMatrixScale);
-  pMatrix.multiply(nodeTransMoon.pointMatrixSelfRotation);
+  if(parentAnimator == undefined) {
+    pointMatrix.multiply(animator.pointMatrixParentRotation);
+    pointMatrix.multiply(animator.pointMatrixTranslate);
+    pointMatrix.multiply(animator.pointMatrixScale);
+    pointMatrix.multiply(animator.pointMatrixSelfRotation);
+    normalMatrix.multiply(animator.normalMatrixSelfRotation);
+    normalMatrix.multiply(animator.normalMatrixParentRotation);
+  } else {
+    pointMatrix.multiply(parentAnimator.pointMatrixParentRotation);
+    pointMatrix.multiply(parentAnimator.pointMatrixTranslate);
+    pointMatrix.multiply(animator.pointMatrixParentRotation);
+    pointMatrix.multiply(animator.pointMatrixTranslate);
+    pointMatrix.multiply(animator.pointMatrixScale);
+    pointMatrix.multiply(animator.pointMatrixSelfRotation);
+    normalMatrix.multiply(parentAnimator.normalMatrixParentRotation);
+    normalMatrix.multiply(animator.normalMatrixParentRotation);
+    normalMatrix.multiply(animator.normalMatrixSelfRotation);
+  }
 
-  nMatrix.multiply(nodeTrans.normalMatrixParentRotation);
-  nMatrix.multiply(nodeTransMoon.normalMatrixParentRotation);
-  nMatrix.multiply(nodeTransMoon.normalMatrixSelfRotation);
-
-  return { pMatrix, nMatrix };
+  return { pointMatrix,  normalMatrix };
 }
