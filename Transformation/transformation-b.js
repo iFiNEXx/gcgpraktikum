@@ -40,7 +40,7 @@ function renderScene(time) {
         0.0, 0.0, 0.0, 1.0
   );
 
-  // Falls der Szenenknoten eine Shape enthaelt ...
+  // Falls der Szenenknoten eine Shape enthaelt
   if (sceneRoot.shape != undefined) {
     // Tranformation des Szenenknotens bestimmen
     let nodeTransformation = sceneRoot.animator(timeScale * time);
@@ -52,31 +52,44 @@ function renderScene(time) {
     // Szenenknoten rendern
     renderSceneNode(sceneRoot, pointMatrix, normalMatrix);
 
+    // Loop starten
     loop(time, sceneRoot.children, 0);
   }
 }
 
-// Loop soll in ein Loop geändert werden, z.B.: loop(time, array, index)
-
+/* Loop
+*  time = Zeit in Sekunden
+*  array = Array mit den Szenenknoten
+*  parent = Referenz zum Parent Szenenknoten
+*/
 function loop(time, array, index, parent) {
   if(array.length > 0) {
+    // Falls der Szenenknoten eine Shape enthaelt
     if(array[index].shape != undefined) {
       let matrix;
 
+      // Falls parent nicht gesetzt, also der Szenenknoten ein Planet ist
       if(parent == undefined) {
+        // Aufruf der transformation
         matrix = transform(array[index].animator(timeScale * time));
       } else {
+        // Aufruf der transformation
         matrix = transform(array[index].animator(timeScale * time), parent.animator(timeScale * time));
       }
       
+      // Szenenknoten rendern
       renderSceneNode(array[index], matrix.pointMatrix, matrix.normalMatrix);
 
+      // Falls Szenenknoten ein Planet ist und Monde hat
       if(parent == undefined && array[index].children.length > 0) {
+        // Aufruf des Loops um über die Monde zu iterieren
         loop(time, array[index].children, 0, array[index]);
       }
       
+      // Falls Array noch Szenenknoten hat
       if(index < array.length - 1) {
         index++;
+        // Zum nächsten Szenenknoten
         loop(time, array, index, parent);
       }
     }
@@ -260,9 +273,7 @@ function animateNode(time) {
 
 // TODO: Hier werden Sie grundlegende Transformationsfunktionen implementieren.
 
-// Transformationsfunktionen für Planeten
-// nodeTrans: Planet welcher berechnet werden soll
-// return: pMatrix,  nMatrix
+// Transformationsfunktion für Planeten und Monde
 function transform(animator, parentAnimator) {
   let pointMatrix = new Matrix4(
     1.0, 0.0, 0.0, 0.0, 
@@ -278,22 +289,38 @@ function transform(animator, parentAnimator) {
     0.0, 0.0, 0.0, 1.0
   );
 
+  // Falls parentAnimator nicht gesetzt, also der Szenenknoten ein Planet ist
   if(parentAnimator == undefined) {
+    // PointMatrix multiplizieren mit der ParentRotation
     pointMatrix.multiply(animator.pointMatrixParentRotation);
+    // PointMatrix multiplizieren mit Translate
     pointMatrix.multiply(animator.pointMatrixTranslate);
+    // PointMatrix multiplizieren mit Scale
     pointMatrix.multiply(animator.pointMatrixScale);
+    // PointMatrix multiplizieren mit der SelfRotation
     pointMatrix.multiply(animator.pointMatrixSelfRotation);
+    // NormalMatrix multiplizieren mit der SelfRotation
     normalMatrix.multiply(animator.normalMatrixSelfRotation);
+    // NormalMatrix multiplizieren mit der ParentRotation
     normalMatrix.multiply(animator.normalMatrixParentRotation);
   } else {
+    // PointMatrix multiplizieren mit der ParentRotation vom Parent
     pointMatrix.multiply(parentAnimator.pointMatrixParentRotation);
+    // PointMatrix multiplizieren mit Translate vom Parent
     pointMatrix.multiply(parentAnimator.pointMatrixTranslate);
+    // PointMatrix multiplizieren mit der ParentRotation
     pointMatrix.multiply(animator.pointMatrixParentRotation);
+    // PointMatrix multiplizieren mit Translate
     pointMatrix.multiply(animator.pointMatrixTranslate);
+    // PointMatrix multiplizieren mit Scale
     pointMatrix.multiply(animator.pointMatrixScale);
+    // PointMatrix multiplizieren mit der SelfRotation
     pointMatrix.multiply(animator.pointMatrixSelfRotation);
+    // NormalMatrix multiplizieren mit der ParentRotation vom Parent
     normalMatrix.multiply(parentAnimator.normalMatrixParentRotation);
+    // NormalMatrix multiplizieren mit der SelfRotation
     normalMatrix.multiply(animator.normalMatrixParentRotation);
+    // NormalMatrix multiplizieren mit der ParentRotation
     normalMatrix.multiply(animator.normalMatrixSelfRotation);
   }
 
