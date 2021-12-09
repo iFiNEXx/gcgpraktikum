@@ -27,41 +27,17 @@ let timeScale = 10.0; // Faktor fuer die Zeit -- fuer Zeitraffer / Zeitlupe
 function renderScene(time) {
   // Transformationsmatrix fuer Punkte
   let pointMatrix = new Matrix4(
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0
+1.0, 0.0, 0.0, 0.0, 
+0.0, 1.0, 0.0, 0.0, 
+0.0, 0.0, 1.0, 0.0, 
+0.0, 0.0, 0.0, 1.0
   );
   // Transformationsmatrix fuer Normalen
   let normalMatrix = new Matrix4(
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0
+1.0, 0.0, 0.0, 0.0, 
+0.0, 1.0, 0.0, 0.0, 
+0.0, 0.0, 1.0, 0.0, 
+0.0, 0.0, 0.0, 1.0
   );
 
   // Falls der Szenenknoten eine Shape enthaelt ...
@@ -231,40 +207,16 @@ function initScene() {
 function animateSun(time) {
   return {
     pointMatrix: new Matrix4(
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 0.0, 1.0
     ),
     normalMatrix: new Matrix4(
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
+      1.0, 0.0, 0.0, 0.0,
+      0.0, 1.0, 0.0, 0.0,
+      0.0, 0.0, 1.0, 0.0,
+      0.0, 0.0, 0.0, 1.0
     ),
   };
 }
@@ -276,118 +228,47 @@ function animateNode(time) {
 
   return {
     pointMatrixScale: new Matrix4(
-      this.radius,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      this.radius,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      this.radius,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ),
+      
+      this.radius, 0.0, 0.0, 0.0, 
+      0.0, this.radius, 0.0, 0.0, 
+      0.0, 0.0, this.radius, 0.0, 
+      0.0, 0.0, 0.0, 1.0
+    ), 
 
     pointMatrixTranslate: new Matrix4(
-      1.0,
-      0.0,
-      0.0,
-      this.orbitRadius,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ),
+      1.0, 0.0, 0.0, this.orbitRadius, 
+      0.0, 1.0, 0.0, 0.0, 
+      0.0, 0.0, 1.0, 0.0, 
+      0.0, 0.0, 0.0, 1.0
+    ), 
 
     pointMatrixSelfRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ),
+      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      0.0, 1.0, 0.0, 0.0, 
+      -Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      0.0, 0.0, 0.0, 1.0
+    ), 
 
     pointMatrixParentRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ),
+      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      0.0, 1.0, 0.0, 0.0, 
+      -Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      0.0, 0.0, 0.0, 1.0
+    ), 
 
     normalMatrixSelfRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation),
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ),
+      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      0.0, 1.0, 0.0, 0.0, 
+      -Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      0.0, 0.0, 0.0, 1.0
+    ), 
 
     normalMatrixParentRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      0.0,
-      1.0,
-      0.0,
-      0.0,
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation),
-      0.0,
-      0.0,
-      0.0,
-      0.0,
-      1.0
-    ),
+      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      0.0, 1.0, 0.0, 0.0, 
+      -Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      0.0, 0.0, 0.0, 1.0
+    ), 
   };
 }
 
@@ -399,43 +280,19 @@ function animateNode(time) {
 
 // Transformationsfunktionen für Planeten
 // nodeTrans: Planet welcher berechnet werden soll
-// return: pMatrix, nMatrix
+// return: pMatrix,  nMatrix
 function transformation(nodeTrans) {
   let pMatrix = new Matrix4(
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0
+    1.0, 0.0, 0.0, 0.0, 
+    0.0, 1.0, 0.0, 0.0, 
+    0.0, 0.0, 1.0, 0.0, 
+    0.0, 0.0, 0.0, 1.0
   );
   let nMatrix = new Matrix4(
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0
+    1.0, 0.0, 0.0, 0.0, 
+    0.0, 1.0, 0.0, 0.0, 
+    0.0, 0.0, 1.0, 0.0, 
+    0.0, 0.0, 0.0, 1.0
   );
 
   pMatrix.multiply(nodeTrans.pointMatrixParentRotation);
@@ -445,49 +302,25 @@ function transformation(nodeTrans) {
   nMatrix.multiply(nodeTrans.normalMatrixSelfRotation);
   nMatrix.multiply(nodeTrans.normalMatrixParentRotation);
 
-  return { pMatrix, nMatrix };
+  return { pMatrix,  nMatrix };
 }
 
 // Transformationsfunktionen für Monde
 // nodeTrans: Planet um welcher der Mond kreist
 // nodeTransMoon: Mond welcher berechnet werden soll
-// return: pMatrix, nMatrix
-function transformationMoon(nodeTrans, nodeTransMoon) {
+// return: pMatrix,  nMatrix
+function transformationMoon(nodeTrans,  nodeTransMoon) {
   let pMatrix = new Matrix4(
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0
+    1.0, 0.0, 0.0, 0.0, 
+    0.0, 1.0, 0.0, 0.0, 
+    0.0, 0.0, 1.0, 0.0, 
+    0.0, 0.0, 0.0, 1.0
   );
   let nMatrix = new Matrix4(
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    0.0,
-    0.0,
-    1.0
+    1.0, 0.0, 0.0, 0.0, 
+    0.0, 1.0, 0.0, 0.0, 
+    0.0, 0.0, 1.0, 0.0, 
+    0.0, 0.0, 0.0, 1.0
   );
 
   pMatrix.multiply(nodeTrans.pointMatrixParentRotation);
