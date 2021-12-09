@@ -57,10 +57,13 @@ function renderScene(time) {
   }
 }
 
-/* Loop
-*  time = Zeit in Sekunden
-*  array = Array mit den Szenenknoten
-*  parent = Referenz zum Parent Szenenknoten
+
+/**
+* Loop
+*  @param {*} time = Zeit in Sekunden
+*  @param array = Array mit den Szenenknoten
+*  @param index = aktueller Szenenknoten
+*  @param parent = Referenz zum Parent Szenenknoten
 */
 function loop(time, array, index, parent) {
   if(array.length > 0) {
@@ -283,9 +286,15 @@ function animateNode(time) {
 // Transformationsfunktionen
 ////////////////////////////////////////////////////////////////////////////////
 
-// TODO: Hier werden Sie grundlegende Transformationsfunktionen implementieren.
 
-// Transformationsfunktion für Planeten und Monde
+
+
+/**
+ * Transformationsfunktion für Planeten und Monde
+ * @param {*} animator animator des Szenenknoten
+ * @param {*} parentAnimator animator des parent Szenenknoten
+ * @returns  Point-/und Normalmatrix wird berechnet zurückgegeben
+ */
 function transform(animator, parentAnimator) {
   let pointMatrix = new Matrix4(
     1.0, 0.0, 0.0, 0.0, 
