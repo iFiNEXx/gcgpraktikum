@@ -64,9 +64,9 @@ function loop(time, array, index, parent) {
       let matrix;
 
       if(parent == undefined) {
-        matrix = transformation(array[index].animator(timeScale * time));
+        matrix = transform(array[index].animator(timeScale * time));
       } else {
-        matrix = transformation(array[index].animator(timeScale * time), parent.animator(timeScale * time));
+        matrix = transform(array[index].animator(timeScale * time), parent.animator(timeScale * time));
       }
       
       renderSceneNode(array[index], matrix.pointMatrix, matrix.normalMatrix);
@@ -203,49 +203,52 @@ function animateSun(time) {
 // TODO: Hier werden Sie weitere Animate-Funktionen implementieren.
 
 function animateNode(time) {
-  // Aufruf der Funktionen Scale(matrix, radius), Translate(matrix, orbitRadius), Rotate(matrix, time, rotation)
+  let speed = time * (2 * Math.PI);
+  let cosAlphaSelf = Math.cos(speed / this.selfRotation);
+  let sinAlphaSelf = Math.sin(speed / this.selfRotation);
+  let cosAlphaParent = Math.cos(speed / this.orbitRotation);
+  let sinAlphaParent = Math.sin(speed / this.orbitRotation);
 
   return {
     pointMatrixScale: new Matrix4(
-      
       this.radius, 0.0, 0.0, 0.0, 
       0.0, this.radius, 0.0, 0.0, 
       0.0, 0.0, this.radius, 0.0, 
       0.0, 0.0, 0.0, 1.0
-    ), 
+    ),
 
     pointMatrixTranslate: new Matrix4(
       1.0, 0.0, 0.0, this.orbitRadius, 
       0.0, 1.0, 0.0, 0.0, 
       0.0, 0.0, 1.0, 0.0, 
       0.0, 0.0, 0.0, 1.0
-    ), 
+    ),
 
     pointMatrixSelfRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      cosAlphaSelf, 0.0, sinAlphaSelf, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      -sinAlphaSelf, 0.0, cosAlphaSelf, 0.0, 
       0.0, 0.0, 0.0, 1.0
-    ), 
+    ),
 
     pointMatrixParentRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      cosAlphaParent, 0.0, sinAlphaParent, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      -sinAlphaParent, 0.0, cosAlphaParent, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ), 
 
     normalMatrixSelfRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      cosAlphaSelf, 0.0, sinAlphaSelf, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.selfRotation), 0.0, 
+      -sinAlphaSelf, 0.0, cosAlphaSelf, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ), 
 
     normalMatrixParentRotation: new Matrix4(
-      Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      cosAlphaParent, 0.0, sinAlphaParent, 0.0, 
       0.0, 1.0, 0.0, 0.0, 
-      -Math.sin((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, Math.cos((time * ((360 * Math.PI) / 180)) / this.orbitRotation), 0.0, 
+      -sinAlphaParent, 0.0, cosAlphaParent, 0.0, 
       0.0, 0.0, 0.0, 1.0
     ), 
   };
@@ -260,7 +263,7 @@ function animateNode(time) {
 // Transformationsfunktionen für Planeten
 // nodeTrans: Planet welcher berechnet werden soll
 // return: pMatrix,  nMatrix
-function transformation(animator, parentAnimator) {
+function transform(animator, parentAnimator) {
   let pointMatrix = new Matrix4(
     1.0, 0.0, 0.0, 0.0, 
     0.0, 1.0, 0.0, 0.0, 
