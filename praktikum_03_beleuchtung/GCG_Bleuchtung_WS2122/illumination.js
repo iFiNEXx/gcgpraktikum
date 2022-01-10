@@ -5,13 +5,13 @@
 //
 // HS Duesseldorf - Fachbereich Medien - Grundlagen d. Computergrafik
 //
-// Studiengang:
-// Gruppe     :
-// Autor 1    :
-// Autor 2    :
-// Autor 3    :
-// Autor 4    :
-// Autor 5    :
+// Studiengang: BMI
+// Gruppe     : N
+// Autor 1    : Blumenrath, Kim
+// Autor 2    : Fitzen, Julian
+// Autor 3    : Hüls, Jan
+// Autor 4    : Kiesche, Valentin
+// Autor 5    : Lamsalam, Chaymae
 ////////////////////////////////////////////////////////////////////////////////
 
 
@@ -82,5 +82,7 @@ function phong(position, normal, camPosition)
     outColor.b += lights[0].intensity.b * diffuseCoeffizient.b * scalar;
   }
 
+  //Reflexionsvektor
+  let reflectVec = new THREE.Vector3().copy(2*scalar.multiplyScalar(scalar) *;);
   return outColor;
 }
