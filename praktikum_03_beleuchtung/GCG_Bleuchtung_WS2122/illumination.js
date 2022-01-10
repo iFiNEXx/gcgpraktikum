@@ -20,9 +20,12 @@
 let ambientLight = {intensity: {r: 0.125, g: 0.125, b: 0.125}};
 // ambiente Reflektionskoeffizient
 let ambientCoeffizient = {r: 1, g: 1, b: 1};
+// Diffuser Reflektionskoeffizient
+let diffuseCoeffizient = {r: 1, g: 1, b: 1};
 
 // alle übrigen (Punkt)-Lichter der Szene
 let lights = [
+  //position 0
   {position: new THREE.Vector3(-100, 100, 75),
    intensity: {r: 0.875, g: 0.625, b: 0.125}},
 ];
@@ -59,22 +62,25 @@ function phong(position, normal, camPosition)
   // TODO: Implementieren Sie die Beleuchtungsberechnung
   //       mit dem Phong-Beleuchtungsmodell.
 
-  ambientLightCalculation(outColor);
   
-  // Rueckgabe des berechneten Farbwerts
-  return outColor;
-}
-/**
- * Berechnung des ambivalenten Terms (Grundhelligkeit des Raums)
- * @param {*} outColor 
- * @returns 
- */
-function ambientLightCalculation (outColor) {
   //Berechnung der Formel ia = Ia· ka
-  outColor.r = ambientLight.intensity.r * ambientCoeffizient.r;
-  outColor.g = ambientLight.intensity.g * ambientCoeffizient.g;
-  outColor.b = ambientLight.intensity.b * ambientCoeffizient.b;
+  outColor.r += ambientLight.intensity.r * ambientCoeffizient.r;
+  outColor.g += ambientLight.intensity.g * ambientCoeffizient.g;
+  outColor.b += ambientLight.intensity.b * ambientCoeffizient.b;
 
-  // Rueckgabe des berechneten Farbwerts
+  let lightVec = new THREE.Vector3();
+  lightVec.subVectors(lights[0].position, position);
+  // normailisieren
+  lightVec.normalize();
+  let normalVec = new THREE.Vector3().copy(normal.normalize());
+  //Skalarprodukt
+  let scalar = normalVec.dot(lightVec);
+
+  if (scalar >= 0) {
+    outColor.r += lights[0].intensity.r * diffuseCoeffizient.r * scalar;
+    outColor.g += lights[0].intensity.g * diffuseCoeffizient.g * scalar;
+    outColor.b += lights[0].intensity.b * diffuseCoeffizient.b * scalar;
+  }
+
   return outColor;
 }
