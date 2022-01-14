@@ -19,11 +19,11 @@
 // das ambiente Licht
 let ambientLight = {intensity: {r: 0.125, g: 0.125, b: 0.125}};
 // ambiente Reflektionskoeffizient
-let ambientCoeffizient = {r: 1, g: 1, b: 1};
+let ambientCoeffizient = {r: 0.6, g: 0.7, b: 0.7};
 // Diffuser Reflektionskoeffizient
 let diffuseCoeffizient = {r: 0.5, g: 0.5, b: 0.5};
 // Spektrum Reflektionskoeffizient
-let spectrumCoeffizient = {r: 1, g: 1, b: 1};
+let spectrumCoeffizient = {r: 0.3, g: 0.6, b: 0.3};
 //Exponent
 let n = 10;
 
