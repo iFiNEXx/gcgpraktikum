@@ -109,7 +109,7 @@ function phong(position, normal, camPosition)
     outColor.g += lights[i].intensity.g * spectrumCoeffizient.g * spekularenAnteil;
     outColor.b += lights[i].intensity.b * spectrumCoeffizient.b * spekularenAnteil;
   }
-  }
+  
 
   //Spectrum
   //Reflektionsvektor
