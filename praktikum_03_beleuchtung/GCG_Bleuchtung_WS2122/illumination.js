@@ -79,10 +79,11 @@ function phong(position, normal, camPosition)
   for (let i=0; i<lights.length; i++) {
   let lightVec = new THREE.Vector3();
   lightVec.subVectors(lights[i].position, position);
-  // normalisieren
+  //normalisieren des Lichtvektors
   lightVec.normalize();
   let normalVec = new THREE.Vector3().copy(normal.normalize());
   //Skalarprodukt
+  //Berechnung der Formel id = Ip · kd(N · L)
   let scalar = normalVec.dot(lightVec);
   if (scalar >= 0) {
     outColor.r += lights[i].intensity.r * diffuseCoeffizient.r * scalar;
@@ -101,28 +102,8 @@ function phong(position, normal, camPosition)
   viewVec.normalize();
 
   let spectrumScalar = reflectionsVec.dot(viewVec);
-
-  if (spectrumScalar >= 0) {
-    let spekularenAnteil = Math.pow(spectrumScalar,n);
-
-    outColor.r += lights[i].intensity.r * spectrumCoeffizient.r * spekularenAnteil;
-    outColor.g += lights[i].intensity.g * spectrumCoeffizient.g * spekularenAnteil;
-    outColor.b += lights[i].intensity.b * spectrumCoeffizient.b * spekularenAnteil;
-  }
-  
-
-  //Spectrum
-  //Reflektionsvektor
-  let reflectionsVec = new THREE.Vector3().copy(normalVec.multiplyScalar(scalar * 2));
-  reflectionsVec.subVectors(reflectionsVec, lightVec);
-  reflectionsVec.normalize();
-  //Viewvektor
-  let viewVec = new THREE.Vector3();
-  viewVec.subVectors(camPosition, position);
-  viewVec.normalize();
-
-  let spectrumScalar = reflectionsVec.dot(viewVec);
-
+  //Beleuchtungsberechnungs Rückgabewert aus Ambient und Skalarprodukt
+  // 
   if (spectrumScalar >= 0) {
     let spekularenAnteil = Math.pow(spectrumScalar,n);
 
@@ -131,5 +112,6 @@ function phong(position, normal, camPosition)
     outColor.b += lights[i].intensity.b * spectrumCoeffizient.b * spekularenAnteil;
   }
   }
+
   return outColor;
 }
